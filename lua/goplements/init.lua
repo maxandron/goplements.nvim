@@ -110,9 +110,11 @@ M.get_package_name = function(fdata)
 end
 
 --- @alias goplements.LspImplementation { range: { start: { line: integer, character: integer }, ["end"]: { line: integer, character: integer } }, uri: string }
---- @param result goplements.LspImplementation[]
---- @param publish_names fun(names: string[])
-M.implementation_callback = function(result, publish_names)
+
+--- @param fcache {[string]: string[]} Caches files to avoid reading them multiple times
+--- @param result goplements.LspImplementation[] The results from the LSP server
+--- @param publish_names fun(names: string[]) Called with the names of the implementations
+M.implementation_callback = function(fcache, result, publish_names)
   --- @type string[]
   local names = {}
   if result then
@@ -124,7 +126,12 @@ M.implementation_callback = function(result, publish_names)
 
       -- Read the line of the implementation to get the name
       local file = vim.uri_to_fname(uri)
-      local data = vim.fn.readfile(file)
+      local data = fcache[file]
+      if not data then
+        data = vim.fn.readfile(file)
+        fcache[file] = data
+      end
+
       local package_name = ""
       if M.config.display_package then
         package_name = M.get_package_name(data)
@@ -142,11 +149,12 @@ M.implementation_callback = function(result, publish_names)
 end
 
 --- Add virtual text to the struct/interface at the given line and character position
+--- @param fcache table<string, string[]> Caches files to avoid reading them multiple times
 --- @param client vim.lsp.Client The LSP client
 --- @param line integer The line number of the struct/interface
 --- @param character integer The character position of the struct/interface name
---- @param callback fun(names: string[])
-local function get_implementation_names(client, line, character, callback)
+--- @param publish_names fun(names: string[])
+M.get_implementation_names = function(fcache, client, line, character, publish_names)
   client.request("textDocument/implementation", {
     textDocument = vim.lsp.util.make_text_document_params(),
     position = {
@@ -159,7 +167,7 @@ local function get_implementation_names(client, line, character, callback)
       return
     end
 
-    M.implementation_callback(result, callback)
+    M.implementation_callback(fcache, result, publish_names)
   end)
 end
 
@@ -194,13 +202,15 @@ M.callback = function(namespace, bufnr, client_id)
     return
   end
 
+  local fcache = {}
   clear(namespace)
+
   local nodes = M.find_types(bufnr)
   for _, node in ipairs(nodes) do
     local prefix = M.config.prefix[node.type]
     assert(prefix, "prefix not found for node type .. " .. node.type)
 
-    get_implementation_names(client, node.line, node.character + 1, function(names)
+    M.get_implementation_names(fcache, client, node.line, node.character + 1, function(names)
       M.set_virt_text(namespace, bufnr, node.line, prefix, names)
     end)
   end

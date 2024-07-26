@@ -1,4 +1,5 @@
 ---@module 'luassert'
+
 local goplements = require("goplements")
 
 describe("set_virt_text", function()
@@ -47,7 +48,7 @@ describe("implementation_callback", function()
 
   it("always publishes names", function()
     local called = false
-    goplements.implementation_callback({}, function(names)
+    goplements.implementation_callback({}, {}, function(names)
       called = true
       assert.are.same({}, names)
     end)
@@ -60,7 +61,7 @@ describe("implementation_callback", function()
     local fn = stub.new(vim.fn, "readfile")
     fn.returns({ "package foo", "func main() {}" })
 
-    goplements.implementation_callback({
+    goplements.implementation_callback({}, {
       {
         uri = "file://uri",
         range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
@@ -85,7 +86,7 @@ describe("implementation_callback", function()
     local fn = stub.new(vim.fn, "readfile")
     fn.returns({ "package foo", "func main() {}" })
 
-    goplements.implementation_callback({
+    goplements.implementation_callback({}, {
       {
         uri = "file://uri",
         range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
@@ -95,6 +96,32 @@ describe("implementation_callback", function()
     end)
 
     assert.is_true(fn:called_with({ "/uri", n = 1 }))
+
+    fn:revert()
+  end)
+
+  it("doesn't read the same file twice", function()
+    local fn = stub.new(vim.fn, "readfile")
+    local data = { "package foo", "func main() {}" }
+    fn.returns(data)
+
+    local cache = {}
+    goplements.implementation_callback(cache, {
+      {
+        uri = "file://uri",
+        range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
+      },
+      {
+        uri = "file://uri",
+        range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
+      },
+    }, function(names)
+      assert.are.same({ "foo.main", "foo.main" }, names)
+    end)
+
+    assert.is_true(fn:called(1))
+
+    assert.are.same(cache["/uri"], data)
 
     fn:revert()
   end)
