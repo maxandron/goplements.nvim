@@ -225,7 +225,7 @@ local function register_autocmds(namespace)
   vim.api.nvim_create_autocmd({ "InsertLeave" }, {
     pattern = { "*.go" },
     callback = function()
-      M._enabled = true
+      M.enable()
     end,
   })
 end
