@@ -1,80 +1,76 @@
-*goplements.nvim.txt*            For Neovim           Last change: 2024 July 27
+*goplements.nvim.txt*         For NVIM v0.8.0        Last change: 2024 July 27
 
 ==============================================================================
-Table of Contents                           *goplements.nvim-table-of-contents*
+Table of Contents                          *goplements.nvim-table-of-contents*
 
-1. Goplements                                       |goplements.nvim-goplements|
-  - Features                               |goplements.nvim-goplements-features|
-  - Requirements                       |goplements.nvim-goplements-requirements|
-  - Installation                       |goplements.nvim-goplements-installation|
-  - Configuration                     |goplements.nvim-goplements-configuration|
-  - Mappings                               |goplements.nvim-goplements-mappings|
-  - Triggers                               |goplements.nvim-goplements-triggers|
-  - Icons                                     |goplements.nvim-goplements-icons|
-  - Usage                                     |goplements.nvim-goplements-usage|
-  - Hydra Mode                           |goplements.nvim-goplements-hydra-mode|
-  - Plugins                                 |goplements.nvim-goplements-plugins|
-  - Colors                                   |goplements.nvim-goplements-colors|
-2. Links                                                |goplements.nvim-links|
+1. Goplements.nvim                           |goplements.nvim-goplements.nvim|
+  - ✨ Features                |goplements.nvim-goplements.nvim-✨-features|
+  - ⚡️ Requirements  |goplements.nvim-goplements.nvim-⚡️-requirements|
+  - 📦 Installation      |goplements.nvim-goplements.nvim-📦-installation|
+  - ⚙️ Configuration|goplements.nvim-goplements.nvim-⚙️-configuration|
+  - 🚀 Usage and API    |goplements.nvim-goplements.nvim-🚀-usage-and-api|
+2. Links                                               |goplements.nvim-links|
 
 ==============================================================================
-1. Goplements                                       *goplements.nvim-goplements*
+1. Goplements.nvim                           *goplements.nvim-goplements.nvim*
 
-**Goplements** brings implementations into the foreground
-for structs and interfaces in Go files.
+Goplements is a small neovim plugin for Go: brings implementations into the
+foreground for structs and interfaces.
 
 
-FEATURES                                   *goplements.nvim-goplements-features*
+✨ FEATURES                    *goplements.nvim-goplements.nvim-✨-features*
+
+
+  Do one job and do it well.
+We got the "one job" part, now let’s see if we can do it well.
 
 - Displays the implementors of an interface next to the definition.
 - Dispays the interfaces implemented by a struct next to the definition.
 
-REQUIREMENTS                           *goplements.nvim-goplements-requirements*
+
+⚡️ REQUIREMENTS      *goplements.nvim-goplements.nvim-⚡️-requirements*
 
 - **Neovim** >= 0.9.4
 - LSP with the `gopls` server
-  - for the `textDocument/implementations` request
-- (optional) [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter/)
-  with the `go` parser installed.
-  - for an unnoticeably faster experience
+    - for the `textDocument/implementations` request
+- (optional) nvim-treesitter <https://github.com/nvim-treesitter/nvim-treesitter/> with the `go` parser installed.
+    - for an unnoticeably faster experience
 
 
-INSTALLATION                           *goplements.nvim-goplements-installation*
+📦 INSTALLATION          *goplements.nvim-goplements.nvim-📦-installation*
 
-Install the plugin with your package manager:
+Install the plugin with your package manager.
 
 
-LAZY.NVIM  ~
+LAZY.NVIM ~
 
 >lua
     {
       "maxandron/goplement.nvim",
       ft = "go",
       opts = {
-	-- your configuration comes here
-	-- or leave it empty to use the default settings
-	-- refer to the configuration section below
+        -- your configuration comes here
+        -- or leave it empty to use the default settings
+        -- refer to the configuration section below
       },
     }
 <
 
 
-CONFIGURATION                         *goplements.nvim-goplements-configuration*
+⚙️ CONFIGURATION    *goplements.nvim-goplements.nvim-⚙️-configuration*
 
-Default Options ~
+Default Options
 
 >lua
     local defaults = {
       -- The prefixes prepended to the type names
       prefix = {
-	interface = "implemented by: ",
-	struct = "implements: ",
+        interface = "implemented by: ",
+        struct = "implements: ",
       },
-      -- Whether to display the package name along with the type name
-      -- (i.e. builtins.error vs error)
+      -- Whether to display the package name along with the type name (i.e. builtins.error vs error)
       display_package = false,
-      -- The namespace to use for the extmarks
-      -- (no real reason to change this except for testing)
+      -- The namespace to use for the extmarks (no real reason to change this except for testing)
       namespace_name = "goplements",
       -- The highlight group to use (if you want to change the default colors)
       -- The default links to DiagnosticHint
@@ -82,8 +78,8 @@ Default Options ~
     }
 <
 
-USAGE					 *goplements.nvim-goplements-usage*
 
+🚀 USAGE AND API        *goplements.nvim-goplements.nvim-🚀-usage-and-api*
 
 The plugin is automatically enabled for Go files using an autocmd.
 
@@ -98,5 +94,14 @@ The same commands are also available as lua functions:
 - `require("goplements").enable()`
 - `require("goplements").disable()`
 - `require("goplements").toggle()`
+
+test
+
+==============================================================================
+2. Links                                               *goplements.nvim-links*
+
+1. *image*: https://github.com/user-attachments/assets/e2a2e194-e5f6-492b-8657-1906d3d7e034
+
+Generated by panvimdoc <https://github.com/kdheepak/panvimdoc>
 
 vim:tw=78:ts=8:noet:ft=help:norl:
