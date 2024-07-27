@@ -60,3 +60,18 @@ local defaults = {
 }
 ```
 
+## 🚀 Usage and API
+
+The plugin is automatically enabled for Go files using an autocmd.
+
+Three commands are provided for disabling, enabling and toggling the plugin:
+
+- `:GoplementEnable`
+- `:GoplementDisable`
+- `:GoplementToggle`
+
+The same commands are also available as lua functions:
+
+- `require("goplements").enable()`
+- `require("goplements").disable()`
+- `require("goplements").toggle()`
