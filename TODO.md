@@ -11,3 +11,4 @@
 - [x] fix makefile
 - [ ] make CI work
 - [ ] create docs
+- [ ] add a config to show only a maximum number of implementations

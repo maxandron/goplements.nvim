@@ -2,7 +2,7 @@
 
 A blazingly blazy small plugin for Go: bringing implementations into the foreground for structs and interfaces.
 
-![image](https://github.com/user-attachments/assets/89277334-dcdc-4b0f-9fd4-02f27012f589)
+![image](https://github.com/user-attachments/assets/e2a2e194-e5f6-492b-8657-1906d3d7e034)
 
 ## ✨ Features
 
