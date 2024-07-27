@@ -1,14 +1,14 @@
-*goplements.nvim.txt*         For NVIM v0.8.0        Last change: 2024 July 27
+*goplements.nvim.txt*           For Neovim           Last change: 2024 July 27
 
 ==============================================================================
 Table of Contents                          *goplements.nvim-table-of-contents*
 
 1. Goplements.nvim                           |goplements.nvim-goplements.nvim|
-  - ✨ Features                |goplements.nvim-goplements.nvim-✨-features|
-  - ⚡️ Requirements  |goplements.nvim-goplements.nvim-⚡️-requirements|
-  - 📦 Installation      |goplements.nvim-goplements.nvim-📦-installation|
-  - ⚙️ Configuration|goplements.nvim-goplements.nvim-⚙️-configuration|
-  - 🚀 Usage and API    |goplements.nvim-goplements.nvim-🚀-usage-and-api|
+  - Features                        |goplements.nvim-goplements.nvim-features|
+  - Requirements                |goplements.nvim-goplements.nvim-requirements|
+  - Installation                |goplements.nvim-goplements.nvim-installation|
+  - Configuration              |goplements.nvim-goplements.nvim-configuration|
+  - Usage and API              |goplements.nvim-goplements.nvim-usage-and-api|
 2. Links                                               |goplements.nvim-links|
 
 ==============================================================================
@@ -18,7 +18,7 @@ Goplements is a small neovim plugin for Go: brings implementations into the
 foreground for structs and interfaces.
 
 
-✨ FEATURES                    *goplements.nvim-goplements.nvim-✨-features*
+FEATURES                            *goplements.nvim-goplements.nvim-features*
 
 
   Do one job and do it well.
@@ -28,7 +28,7 @@ We got the "one job" part, now let’s see if we can do it well.
 - Dispays the interfaces implemented by a struct next to the definition.
 
 
-⚡️ REQUIREMENTS      *goplements.nvim-goplements.nvim-⚡️-requirements*
+REQUIREMENTS                    *goplements.nvim-goplements.nvim-requirements*
 
 - **Neovim** >= 0.9.4
 - LSP with the `gopls` server
@@ -37,7 +37,7 @@ We got the "one job" part, now let’s see if we can do it well.
     - for an unnoticeably faster experience
 
 
-📦 INSTALLATION          *goplements.nvim-goplements.nvim-📦-installation*
+INSTALLATION                    *goplements.nvim-goplements.nvim-installation*
 
 Install the plugin with your package manager.
 
@@ -57,7 +57,7 @@ LAZY.NVIM ~
 <
 
 
-⚙️ CONFIGURATION    *goplements.nvim-goplements.nvim-⚙️-configuration*
+CONFIGURATION                  *goplements.nvim-goplements.nvim-configuration*
 
 Default Options
 
@@ -79,7 +79,7 @@ Default Options
 <
 
 
-🚀 USAGE AND API        *goplements.nvim-goplements.nvim-🚀-usage-and-api*
+USAGE AND API                  *goplements.nvim-goplements.nvim-usage-and-api*
 
 The plugin is automatically enabled for Go files using an autocmd.
 
@@ -94,8 +94,6 @@ The same commands are also available as lua functions:
 - `require("goplements").enable()`
 - `require("goplements").disable()`
 - `require("goplements").toggle()`
-
-test
 
 ==============================================================================
 2. Links                                               *goplements.nvim-links*
