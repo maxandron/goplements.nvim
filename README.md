@@ -1,14 +1,23 @@
 # Goplement
 
-A blazingly blazy small plugin for Go: bringing implementations into the foreground for structs and interfaces.
+A small neovim plugin for Go: brings implementations into the foreground for structs and interfaces.
 
 ![image](https://github.com/user-attachments/assets/e2a2e194-e5f6-492b-8657-1906d3d7e034)
 
 ## ✨ Features
 
+> Do one job and do it well.
+
+We got the "one job" part, now let's see if we can do it well.
+
+- Displays the implementors of an interface next to the definition.
+- Dispays the interfaces implemented by a struct next to the definition.
+
 ## ⚡️ Requirements
 
 - **Neovim** >= 0.9.4
+- LSP with the `gopls` server
+  - for the `textDocument/implementations` request
 - (optional) [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter/) with the `go` parser installed.
   - for an unnoticeably faster experience
 

@@ -16,16 +16,10 @@ require("lazy.minit").busted({
       config = function()
         require("nvim-treesitter.configs").setup({
           modules = {},
-          auto_install = false,
+          auto_install = true,
           ignore_install = {},
-          parser_install_dir = nil,
           ensure_installed = { "go" },
-          sync_install = false,
-
-          highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = false,
-          },
+          sync_install = true,
         })
       end,
     },
