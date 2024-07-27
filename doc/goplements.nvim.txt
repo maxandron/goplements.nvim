@@ -46,7 +46,7 @@ LAZY.NVIM ~
 
 >lua
     {
-      "maxandron/goplement.nvim",
+      "maxandron/goplements.nvim",
       ft = "go",
       opts = {
         -- your configuration comes here
