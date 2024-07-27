@@ -75,3 +75,5 @@ The same commands are also available as lua functions:
 - `require("goplements").enable()`
 - `require("goplements").disable()`
 - `require("goplements").toggle()`
+
+test
