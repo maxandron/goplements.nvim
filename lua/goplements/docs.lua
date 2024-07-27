@@ -3,7 +3,7 @@ local Docs = require("lazy.docs")
 local M = {}
 
 function M.update()
-  local config = Docs.extract("lua/goplmenets/config.lua", "\n(--@class wk%.Opts.-\n})")
+  local config = Docs.extract("lua/goplmenets/init.lua", "\n(--@class wk%.Opts.-\n})")
   Docs.save({
     config = config,
     colors = Docs.colors({

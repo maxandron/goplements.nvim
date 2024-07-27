@@ -61,15 +61,12 @@ M.find_types_patterns = function(bufnr)
     local type_prefix = string.match(line, interface_pattern)
     if type_prefix then
       table.insert(nodes, { line = i - 1, character = string.len(type_prefix), type = "interface" })
-      goto continue
+    else
+      type_prefix = string.match(line, struct_pattern)
+      if type_prefix then
+        table.insert(nodes, { line = i - 1, character = string.len(type_prefix), type = "struct" })
+      end
     end
-
-    type_prefix = string.match(line, struct_pattern)
-    if type_prefix then
-      table.insert(nodes, { line = i - 1, character = string.len(type_prefix), type = "struct" })
-      goto continue
-    end
-    ::continue::
   end
   return nodes
 end

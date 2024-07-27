@@ -17,5 +17,3 @@ any = true
 [it]
 any = true
 
-[before_each.args]
-any = true

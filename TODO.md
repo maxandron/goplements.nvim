@@ -8,3 +8,6 @@
 - [x] write tests
 - [x] don't redraw in insert mode
 - [x] don't read the same file twice
+- [x] fix makefile
+- [ ] make CI work
+- [ ] create docs
