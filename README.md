@@ -29,7 +29,7 @@ Install the plugin with your package manager.
 
 ```lua
 {
-  "maxandron/goplement.nvim",
+  "maxandron/goplements.nvim",
   ft = "go",
   opts = {
     -- your configuration comes here
