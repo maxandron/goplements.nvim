@@ -25,6 +25,19 @@ describe("set_virt_text", function()
     assert.are_same(1, #extmarks)
     assert.are.same("prefix name1, name2", extmarks[1][4].virt_text[1][1])
   end)
+
+  it("updates existing extmark", function()
+    local namespace = vim.api.nvim_create_namespace("test")
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "package main" })
+
+    goplements.set_virt_text(namespace, buf, 0, "prefix ", { "name1", "name2" })
+    goplements.set_virt_text(namespace, buf, 0, "prefix ", { "name3", "name4" })
+
+    local extmarks = vim.api.nvim_buf_get_extmarks(buf, namespace, 0, -1, { details = true })
+    assert.are_same(1, #extmarks)
+    assert.are.same("prefix name3, name4", extmarks[1][4].virt_text[1][1])
+  end)
 end)
 
 describe("get_package_name", function()

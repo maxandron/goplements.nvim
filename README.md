@@ -1,6 +1,6 @@
-# Goplement
+# Goplements.nvim
 
-A small neovim plugin for Go: brings implementations into the foreground for structs and interfaces.
+Goplements is a small neovim plugin for Go: brings implementations into the foreground for structs and interfaces.
 
 ![image](https://github.com/user-attachments/assets/e2a2e194-e5f6-492b-8657-1906d3d7e034)
 

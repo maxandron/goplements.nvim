@@ -79,18 +79,14 @@ M.find_types = function(bufnr)
   if ok then
     return M.find_types_ts(parser)
   end
-  print("Treesitter parser not found for Go")
-  return {}
+  return M.find_types_patterns(bufnr)
 end
 
 --- Clear all extmarks in the current buffer
---- @param namespace integer
-local function clear(namespace)
-  vim.api.nvim_buf_clear_namespace(0, namespace, 0, -1)
-end
-
-local function set_colors()
-  vim.api.nvim_set_hl(0, "Goplements", { default = true, link = "DiagnosticHint" })
+--- @param namespace integer The namespace to clear
+--- @param bufnr? integer The buffer number to clear the extmarks from, defaults to the current buffer
+local function clear(namespace, bufnr)
+  vim.api.nvim_buf_clear_namespace(bufnr or 0, namespace, 0, -1)
 end
 
 --- Given the lines from a Go file - searches for the package name
@@ -177,30 +173,41 @@ end
 M.set_virt_text = function(namespace, bufnr, line, prefix, names)
   if #names > 0 then
     local impl_text = prefix .. table.concat(names, ", ")
-    vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, {
+    local opts = {
       virt_text = { { impl_text, M.config.highlight } },
       virt_text_pos = "eol",
-    })
+    }
+
+    -- insurance that we don't create multiple extmarks on the same line
+    local marks = vim.api.nvim_buf_get_extmarks(bufnr, namespace, { line, 0 }, { line, -1 }, {})
+    if #marks > 0 then
+      opts.id = marks[1][1]
+    end
+
+    vim.api.nvim_buf_set_extmark(bufnr, namespace, line, 0, opts)
   end
 end
 
---- The callback for the LspNotify autocmd
+M._running = {}
+
+--- Searches for structs and interfaces in the current buffer
+--- and adds virtual text with implementations details next to them
+--- Called from autocmd
 --- @param namespace integer
 --- @param bufnr integer
---- @param client_id integer
-M.callback = function(namespace, bufnr, client_id)
+function M:annotate_structs_interfaces(namespace, bufnr)
   if not M._enabled then
     return
   end
 
-  local client = vim.lsp.get_client_by_id(client_id)
-  assert(client, "expected client to not be nil")
-  if client.name ~= "gopls" then
+  local client = vim.lsp.get_clients({ name = "gopls" })[1]
+  if not client then
+    -- assume gopls client was not attached yet
     return
   end
 
   local fcache = {}
-  clear(namespace)
+  clear(namespace, bufnr)
 
   local nodes = M.find_types(bufnr)
   for _, node in ipairs(nodes) do
@@ -214,25 +221,12 @@ M.callback = function(namespace, bufnr, client_id)
 end
 
 --- @param namespace integer
-local function register_autocmds(namespace)
-  vim.api.nvim_create_autocmd({ "LspNotify" }, {
+function M:register_autocmds(namespace)
+  -- Run when the text is changed in normal mode, user leaves insert mode, or when the LSP client attaches
+  vim.api.nvim_create_autocmd({ "TextChanged", "InsertLeave", "LspAttach" }, {
     pattern = { "*.go" },
     callback = function(args)
-      M.callback(namespace, args.buf, args.data.client_id)
-    end,
-  })
-
-  vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-    pattern = { "*.go" },
-    callback = function()
-      M._enabled = false
-    end,
-  })
-
-  vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-    pattern = { "*.go" },
-    callback = function()
-      M.enable()
+      M:annotate_structs_interfaces(namespace, args.buf)
     end,
   })
 end
@@ -245,15 +239,9 @@ end
 M.enable = function()
   M._enabled = true
 
-  local client = vim.lsp.get_clients({ name = "gopls" })[1]
-  if not client then
-    -- If gopls is not attached we assume the current buffer is not a Go file
-    return
-  end
-
   local bufnr = vim.api.nvim_get_current_buf()
 
-  M.callback(M._namespace, bufnr, client.id)
+  M:annotate_structs_interfaces(M._namespace, bufnr)
 end
 
 M.toggle = function()
@@ -264,20 +252,24 @@ M.toggle = function()
   end
 end
 
-local function register_user_commands()
+function M:register_user_commands()
   vim.api.nvim_create_user_command("GoplementsEnable", M.enable, { desc = "Enable Goplements" })
   vim.api.nvim_create_user_command("GoplementsDisable", M.disable, { desc = "Disable Goplements" })
   vim.api.nvim_create_user_command("GoplementsToggle", M.toggle, { desc = "Toggle Goplements" })
 end
 
+function M:set_colors()
+  vim.api.nvim_set_hl(0, "Goplements", { default = true, link = "DiagnosticHint" })
+end
+
 ---@param opts? goplements.opts
 function M.setup(opts)
   M.config = vim.tbl_deep_extend("keep", opts or {}, M.config)
-  set_colors()
-  register_user_commands()
+  M:set_colors()
+  M:register_user_commands()
 
   M._namespace = vim.api.nvim_create_namespace(M.config.namespace_name)
-  register_autocmds(M._namespace)
+  M:register_autocmds(M._namespace)
 end
 
 return M
