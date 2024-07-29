@@ -7,7 +7,7 @@ Goplements visualizes Go struct and interface implementations.
 ## ✨ Features
 
 - Displays the implementors of an interface next to the definition.
-- Dispays the interfaces implemented by a struct next to the definition.
+- Displays the interfaces implemented by a struct next to the definition.
 
 ## ⚡️ Requirements
 
@@ -66,7 +66,7 @@ Three commands are provided for disabling, enabling, and toggling the plugin:
 - `:GoplementDisable`
 - `:GoplementToggle`
 
-The same commands are also available as lua functions:
+The same commands are also available as Lua functions:
 
 - `require("goplements").enable()`
 - `require("goplements").disable()`
