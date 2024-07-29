@@ -1,4 +1,4 @@
-*goplements.nvim.txt*           For Neovim           Last change: 2024 July 28
+*goplements.nvim.txt*           For Neovim           Last change: 2024 July 29
 
 ==============================================================================
 Table of Contents                          *goplements.nvim-table-of-contents*
@@ -14,8 +14,7 @@ Table of Contents                          *goplements.nvim-table-of-contents*
 ==============================================================================
 1. Goplements.nvim                           *goplements.nvim-goplements.nvim*
 
-Goplements is a small Neovim plugin for Go that visualizes struct and interface
-implementations.
+Goplements visualizes Go struct and interface implementations.
 
 
 FEATURES                            *goplements.nvim-goplements.nvim-features*
