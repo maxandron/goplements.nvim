@@ -1,6 +1,6 @@
 # Goplements.nvim
 
-Goplements is a small Neovim plugin for Go that visualizes struct and interface implementations.
+Goplements visualizes Go struct and interface implementations.
 
 ![image](https://github.com/user-attachments/assets/e2a2e194-e5f6-492b-8657-1906d3d7e034)
 
