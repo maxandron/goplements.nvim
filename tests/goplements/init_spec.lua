@@ -57,6 +57,10 @@ describe("get_package_name", function()
 end)
 
 describe("implementation_callback", function()
+  before_each(function()
+    goplements.config.display_package = false
+  end)
+
   local stub = require("luassert.stub")
 
   it("always publishes names", function()
@@ -114,6 +118,7 @@ describe("implementation_callback", function()
   end)
 
   it("doesn't read the same file twice", function()
+    goplements.config.display_package = true
     local fn = stub.new(vim.fn, "readfile")
     local data = { "package foo", "func main() {}" }
     fn.returns(data)
@@ -137,6 +142,70 @@ describe("implementation_callback", function()
     assert.are.same(cache["/uri"], data)
 
     fn:revert()
+  end)
+
+  it("read lines from current buffer not filesystem", function()
+    goplements.config.display_package = true
+    local fn = stub.new(vim.fn, "readfile")
+    local data = { "package foo", "func main() {}" }
+    fn.returns(data)
+
+    local cache = {}
+    local buf = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_name(buf, "/uri")
+    vim.api.nvim_buf_set_lines(buf, 0, -1, false, data)
+    vim.api.nvim_set_current_buf(buf)
+
+    goplements.implementation_callback(cache, {
+      {
+        uri = "file://uri",
+        range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
+      },
+    }, function(names)
+      assert.are.same({ "foo.main" }, names)
+    end)
+
+    assert.is_false(fn:called(), "readfile should not be called")
+
+    assert.is_nil(cache["/uri"])
+
+    vim.api.nvim_buf_delete(buf, { force = true })
+    fn:revert()
+  end)
+
+  it("read lines from another buffer if loaded", function()
+    local fn = stub.new(vim.fn, "readfile")
+    fn.returns({ "package bad", "func soup() {}" })
+
+    local data1 = { "package foo", "func main() {}" }
+    local data2 = { "package bar", "func coop() {}" }
+
+    local cache = {}
+    local buf1 = vim.api.nvim_create_buf(false, true)
+    local buf2 = vim.api.nvim_create_buf(false, true)
+    vim.api.nvim_buf_set_name(buf1, "/uri")
+    vim.api.nvim_buf_set_name(buf2, "/uri2")
+    vim.api.nvim_buf_set_lines(buf1, 0, -1, false, data1)
+    vim.api.nvim_buf_set_lines(buf2, 0, -1, false, data2)
+
+    goplements.implementation_callback(cache, {
+      {
+        uri = "file://uri",
+        range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
+      },
+      {
+        uri = "file://uri2",
+        range = { start = { line = 1, character = 5 }, ["end"] = { line = 1, character = 9 } },
+      },
+    }, function(names)
+      assert.are.same({ "main", "coop" }, names)
+    end)
+
+    assert.is_false(fn:called(), "readfile should not be called")
+
+    assert.is_nil(cache["/uri"])
+    vim.api.nvim_buf_delete(buf1, { force = true })
+    vim.api.nvim_buf_delete(buf2, { force = true })
   end)
 end)
 
