@@ -118,11 +118,18 @@ M.implementation_callback = function(fcache, result, publish_names)
       local impl_end = impl.range["end"].character
 
       -- Read the line of the implementation to get the name
-      local file = vim.uri_to_fname(uri)
-      local data = fcache[file]
-      if not data then
-        data = vim.fn.readfile(file)
-        fcache[file] = data
+      local data = {}
+
+      local buf = vim.uri_to_bufnr(uri)
+      if vim.api.nvim_buf_is_loaded(buf) then
+        data = vim.api.nvim_buf_get_lines(buf, 0, impl_line + 1, false)
+      else
+        local file = vim.uri_to_fname(uri)
+        data = fcache[file]
+        if not data then
+          data = vim.fn.readfile(file)
+          fcache[file] = data
+        end
       end
 
       local package_name = ""
