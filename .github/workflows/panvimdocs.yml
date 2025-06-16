@@ -22,7 +22,7 @@ jobs:
           version: "Neovim"
           demojify: true
           treesitter: true
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: "chore(build): auto generate docs"
           branch: ${{ github.head_ref }}
