@@ -11,3 +11,4 @@
 - [x] fix makefile
 - [x] make CI work
 - [x] create docs
+- [ ] combine all commands into one
