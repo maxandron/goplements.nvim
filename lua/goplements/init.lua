@@ -148,6 +148,18 @@ M.implementation_callback = function(fcache, result, publish_names)
   publish_names(names)
 end
 
+--- Utility function for using deprecated function
+---@param client vim.lsp.Client The LSP client
+---@param params table
+---@param callback function
+local function request_implementation(client, params, callback)
+  if vim.fn.has("nvim-0.11") == 1 then
+    client:request("textDocument/implementation", params, callback)
+  else
+    client.request("textDocument/implementation", params, callback)
+  end
+end
+
 --- Add virtual text to the struct/interface at the given line and character position
 --- @param fcache table<string, string[]> Caches files to avoid reading them multiple times
 --- @param client vim.lsp.Client The LSP client
@@ -155,13 +167,15 @@ end
 --- @param character integer The character position of the struct/interface name
 --- @param publish_names fun(names: string[])
 M.get_implementation_names = function(fcache, client, line, character, publish_names)
-  client.request("textDocument/implementation", {
+  local params = {
     textDocument = vim.lsp.util.make_text_document_params(),
     position = {
       line = line,
       character = character,
     },
-  }, function(err, result)
+  }
+
+  request_implementation(client, params, function(err, result)
     if err then
       -- This can happen if the Go file structure is ruined (e.g. the "package" is deleted)
       return
