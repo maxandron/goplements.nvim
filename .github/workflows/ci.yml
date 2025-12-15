@@ -26,7 +26,7 @@ jobs:
       - name: Install system dependencies
         run: sudo apt-get update && sudo apt-get install -y libreadline-dev
       - name: Test Cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .tests
           key: ${{ runner.os }}-tests-${{ hashFiles('tests/minit.lua', 'Makefile') }}
